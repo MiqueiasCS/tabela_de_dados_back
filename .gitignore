@@ -1,0 +1,6 @@
+/venv
+*.pyc
+*.sqlite3
+**__pycache__
+
+.~lock.asset_vulnerability**
