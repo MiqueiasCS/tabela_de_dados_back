@@ -7,3 +7,4 @@ class Vunerabilities(models.Model):
     severity = models.CharField(max_length=10)
     cvss = models.FloatField(null=True)
     publication_date = models.DateField(null=True)
+    fixed = models.BooleanField(default=False)

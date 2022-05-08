@@ -20,7 +20,16 @@ class ReportsView(APIView):
             except ObjectDoesNotExist:
                 return Response({'error': 'Invalid report_id'},status=status.HTTP_404_NOT_FOUND)
 
+        # ipdb.set_trace()
+
+
         reports = Vunerabilities.objects.all()
+        order = request.GET.get('order','date-asc')
+        
+        if order == "date-desc":
+            reports = reports.order_by('-publication_date')
+        else:
+            reports = reports.order_by('publication_date')
 
         serializer = ReportSerializer(reports,many=True)
         
