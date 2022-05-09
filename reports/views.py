@@ -2,43 +2,56 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Vunerabilities
-from .serializers import ReportSerializer
+from .serializers import ReportSerializer, UpdateSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
+from .utils import ordering, queryset_filter
+
 import ipdb
 
-class ReportsView(APIView):
-    def get(self,request, report_id=''):
 
-        if report_id:
-            try:
-                report = Vunerabilities.objects.get(id=report_id)
-                serializer = ReportSerializer(report)
+class ListVunerabilitiesView(APIView):
+    def get(self,request):
 
-                return Response(serializer.data,status=status.HTTP_200_OK)
+        reports = queryset_filter(Vunerabilities,request)
+        ordered_reports = ordering(reports,request)
 
-            except ObjectDoesNotExist:
-                return Response({'error': 'Invalid report_id'},status=status.HTTP_404_NOT_FOUND)
-
-        # ipdb.set_trace()
-
-
-        reports = Vunerabilities.objects.all()
-        order = request.GET.get('order','date-asc')
+        serializer = ReportSerializer( ordered_reports,many=True)
         
-        if order == "date-desc":
-            reports = reports.order_by('-publication_date')
-        else:
-            reports = reports.order_by('publication_date')
-
-        serializer = ReportSerializer(reports,many=True)
-        
-        paginator = Paginator(serializer.data,50)
         page_number = request.GET.get('page',1)
 
         if page_number == "all":
             return Response(serializer.data,status=status.HTTP_200_OK)
 
+        paginator = Paginator(serializer.data,50)
         page_response = paginator.get_page(page_number)
         
         return Response(page_response.object_list,status=status.HTTP_200_OK)
+
+
+class RetrieveUpdateVunerabilitiesView(APIView):
+    def get(self,request, report_id=''):
+        try:
+            report = Vunerabilities.objects.get(id=report_id)
+            serializer = ReportSerializer(report)
+
+            return Response(serializer.data,status=status.HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response({'error': 'Invalid report_id'},status=status.HTTP_404_NOT_FOUND)
+
+
+    def patch(self,request, report_id=''):
+        try:
+            report = Vunerabilities.objects.get(id=report_id)
+            serializer = UpdateSerializer(report,data=request.data)
+
+            if not serializer.is_valid():
+                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            
+            serializer.save()
+
+            return Response(serializer.data,status=status.HTTP_200_OK)
+
+        except ObjectDoesNotExist:
+            return Response({'error': 'Invalid report_id'},status=status.HTTP_404_NOT_FOUND)

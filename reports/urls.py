@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import ReportsView
+from .views import ListVunerabilitiesView,RetrieveUpdateVunerabilitiesView
 
 urlpatterns = [
-    path('reports/',ReportsView.as_view()),
-    path('reports/<int:report_id>/', ReportsView.as_view())
+    path('reports/',ListVunerabilitiesView.as_view()),
+    path('reports/<int:report_id>/', RetrieveUpdateVunerabilitiesView.as_view())
 ]
