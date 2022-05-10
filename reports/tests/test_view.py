@@ -71,7 +71,7 @@ class VunerabilitiesRoutesTest(APITestCase):
         self.assertEquals(status.HTTP_404_NOT_FOUND, response.status_code)
 
 
-    def test_can_apply_severity_filter(self):
+    def test_can_filter_by_severity(self):
         response = self.client.get(f"/api/reports/?severity=critico")
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
@@ -79,7 +79,7 @@ class VunerabilitiesRoutesTest(APITestCase):
         self.assertIn(ReportSerializer(instance=self.vunerabilities[2]).data,response.data)
 
 
-    def test_can_apply_fixed_filter(self):
+    def test_can_filter_by_fixed(self):
         response = self.client.get(f"/api/reports/?fixed=corrigida")
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
@@ -87,12 +87,27 @@ class VunerabilitiesRoutesTest(APITestCase):
         self.assertIn(ReportSerializer(instance=self.vunerabilities[0]).data,response.data)
 
 
-    def test_can_apply_severity_filter_and_fixed_filter(self):
+    def test_can_filter_by_severity_and_fixed(self):
         response = self.client.get(f"/api/reports/?severity=critico&fixed=corrigida")
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(1,len(response.data))
         self.assertIn(ReportSerializer(instance=self.vunerabilities[2]).data,response.data)
+
+
+    def test_can_filter_by_hostname(self):
+        response = self.client.get(f"/api/reports/?name=server-4")
+
+        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        
+        self.assertEquals(ReportSerializer(instance=self.vunerabilities[1]).data['hostname'],response.data[0]['hostname'])
+
+
+    def test_return_empty_list_filter_by_invalid_hostname(self):
+        response = self.client.get(f"/api/reports/?name=aaassdasd")
+
+        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEquals(0,len(response.data))
 
     
     def test_can_sort_by_date(self):
@@ -118,6 +133,7 @@ class VunerabilitiesRoutesTest(APITestCase):
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertNotEquals(self.vunerabilities[0].fixed,response.data["fixed"])
         self.assertEquals(False,response.data["fixed"])
+
 
     def test_can_update_fixed_to_true(self):
         response = self.client.patch(f"/api/reports/{self.vunerabilities[1].id}/",{"fixed":True})

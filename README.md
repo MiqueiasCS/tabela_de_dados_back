@@ -1,3 +1,7 @@
+# Descrição
+
+Uma aplicação que recebe dados de um csv e permite a consulta de uma lista de vulnerabilidades e a atualização de status das mesmas (corrigidas, não corrigidas)
+
 ## Instalação
 
 - Primeiro faça o fork e clone o repositório
@@ -74,7 +78,13 @@ Lista todas as vunerabilidades com paginação de no mácimo 50 por página
 
   - Ex.: api/reports/?page=3&date=desc&cvss=asc
 
-- Podem ser aplicados dois filtros, o **severity** e o **fixed**
+- Pode ser filtrado por **hostname**
+
+  - use o parâmetro _name_
+
+  - Ex.: api/reports/?name=server-4
+
+- Podem ser aplicados mais dois filtros, o **severity** e o **fixed**
 
   - O _severity_ aceita os seguintes valores:
 
