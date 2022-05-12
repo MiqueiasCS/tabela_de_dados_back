@@ -6,9 +6,14 @@ from .serializers import ReportSerializer, UpdateSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from .utils import ordering, queryset_filter
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 
 
 class ListVunerabilitiesView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self,request):
 
         reports = queryset_filter(Vunerabilities,request)
@@ -34,6 +39,9 @@ class ListVunerabilitiesView(APIView):
 
 
 class RetrieveVunerabilitiesByNameView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self,request, hostname=''):
         report = Vunerabilities.objects.filter(hostname__iexact=hostname)
         serializer = ReportSerializer(report,many=True)
@@ -54,6 +62,9 @@ class RetrieveVunerabilitiesByNameView(APIView):
 
 
 class RetrieveUpdateVunerabilitiesView(APIView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get(self,request, report_id=''):
         try:
             report = Vunerabilities.objects.get(id=report_id)
