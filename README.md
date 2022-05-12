@@ -71,7 +71,7 @@ Lista todas as vunerabilidades com paginação de no mácimo 50 por página
 
 - para selecionar outras páginas utilize o parâmetro: _page_. Ex.: api/reports/?page=3
 
-- Por padrão, o resultado da requisição é ordenado em conjunto por data de publicação crescente **e** cvss decrescente respectivamente.
+- Por padrão, o resultado da requisição é ordenado em conjunto por cvss decrescente **e** data de publicação crescente respectivamente.
 - Para uma ordenação por data de publicação decrescente utilize **date='desc'**
   - Ex.: api/reports/?page=3&date=desc
 - Para uma ordenação por cvss crescente utilize **cvss='asc'**
@@ -98,11 +98,17 @@ Lista todas as vunerabilidades com paginação de no mácimo 50 por página
     - api/reports/?page=3&fixed=corrigida
     - api/reports/?page=3&severity=baixo
 
-## GET - pegar uma
+## GET - mostrar por id
 
 Pega uma vunerabilidade específica através de seu id
 
 ### Endpoint: api/reports/< int:report_id >/
+
+## GET - listar por hostname
+
+Pega um lista de vunerabilidades registradas com o hostname
+
+### Endpoint: api/reports/< str:hostname >/
 
 ## PATCH - Atualizar status da Vunerabilidade
 

@@ -7,8 +7,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator
 from .utils import ordering, queryset_filter
 
-import ipdb
-
 
 class ListVunerabilitiesView(APIView):
     def get(self,request):
@@ -26,7 +24,33 @@ class ListVunerabilitiesView(APIView):
         paginator = Paginator(serializer.data,50)
         page_response = paginator.get_page(page_number)
         
-        return Response(page_response.object_list,status=status.HTTP_200_OK)
+        
+        resp = {
+            'total' : len(serializer.data),
+            'enviados': len(page_response.object_list),
+            'itens':page_response.object_list
+        }
+        return Response(resp,status=status.HTTP_200_OK)
+
+
+class RetrieveVunerabilitiesByNameView(APIView):
+    def get(self,request, hostname=''):
+        report = Vunerabilities.objects.filter(hostname__iexact=hostname)
+        serializer = ReportSerializer(report,many=True)
+
+        page_number = request.GET.get('page',1)
+        paginator = Paginator(serializer.data,50)
+        page_response = paginator.get_page(page_number)
+        
+        
+        resp = {
+            'total' : len(serializer.data),
+            'enviados': len(page_response.object_list),
+            'itens':page_response.object_list
+        }
+
+        return Response(resp,status=status.HTTP_200_OK)
+
 
 
 class RetrieveUpdateVunerabilitiesView(APIView):

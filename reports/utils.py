@@ -11,7 +11,7 @@ def ordering(queryset,request):
     if date == 'desc':
         filter_date = '-publication_date'
     
-    reports = queryset.order_by(filter_date,filter_cvss)
+    reports = queryset.order_by(filter_cvss,filter_date)
 
     return reports
 
@@ -22,14 +22,11 @@ def queryset_filter(entry,request):
         "alto":"Alto",
         "medio":"Médio",
         "baixo": "Baixo"
-
     }
-
     name = request.GET.get('name','')
     severity_type = request.GET.get('severity','')
     fixed_type = request.GET.get('fixed','')
     valid_fixed_type = (fixed_type == "corrigida") or (fixed_type == "nao-corrigida")
-
 
     if severity_type in severity_states.keys() and valid_fixed_type:
         return entry.objects.filter(severity=severity_states[severity_type],fixed=(fixed_type == "corrigida"))

@@ -8,7 +8,7 @@ def register_user():
 
     User.objects.all().delete()
 
-    new_user = User(**user)
+    new_user = User.objects.create_user(**user)
     new_user.save()
 
 

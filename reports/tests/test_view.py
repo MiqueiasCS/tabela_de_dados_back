@@ -44,6 +44,15 @@ class VunerabilitiesRoutesTest(APITestCase):
                 cvss = 3.0,
                 publication_date = date.fromisoformat("2016-07-20"),
                 fixed = False
+                ),
+                  Vunerabilities.objects.create(
+                hostname = "SERVER-2",
+                ip_address =  "172.20.0.2",
+                title = "SSL Certificate Signed Using Weak Hashing Algorithm",
+                severity = "Alto",
+                cvss = 6.0,
+                publication_date = date.fromisoformat("2016-07-20"),
+                fixed = False
                 )
         ]
 
@@ -115,7 +124,7 @@ class VunerabilitiesRoutesTest(APITestCase):
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(len(self.vunerabilities),len(response.data))
-        self.assertEquals(ReportSerializer(instance=self.vunerabilities[0]).data,response.data[0])
+        self.assertEquals(ReportSerializer(instance=self.vunerabilities[4]).data,response.data[3])
     
 
     def test_can_sort_by_cvss(self):
@@ -123,8 +132,8 @@ class VunerabilitiesRoutesTest(APITestCase):
 
         self.assertEquals(status.HTTP_200_OK, response.status_code)
         self.assertEquals(len(self.vunerabilities),len(response.data))
-
-        self.assertEquals(ReportSerializer(instance=self.vunerabilities[3]).data,response.data[1])
+        
+        self.assertEquals(ReportSerializer(instance=self.vunerabilities[3]).data,response.data[0])
 
 
     def test_can_update_fixed_to_false(self):
@@ -153,3 +162,16 @@ class VunerabilitiesRoutesTest(APITestCase):
         response = self.client.patch(f"/api/reports/{self.vunerabilities[1].id}/",{"fixed":"2016-07-20"})
 
         self.assertEquals(status.HTTP_400_BAD_REQUEST, response.status_code)
+
+
+    def test_retrive_by_name_return_list(self):
+        response = self.client.get(f"/api/reports/server-3/")
+
+        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEquals(1, len(response.data))
+
+    def test_retrive_by_name_route_name_not_found_return_empty_list(self):
+        response = self.client.get(f"/api/reports/xxxxxxxxxxxx/")
+
+        self.assertEquals(status.HTTP_200_OK, response.status_code)
+        self.assertEquals(0, len(response.data))
