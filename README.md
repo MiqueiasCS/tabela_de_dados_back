@@ -1,6 +1,6 @@
 # Descrição
 
-Uma aplicação que recebe dados de um csv e permite a consulta de uma lista de vulnerabilidades e a atualização de status das mesmas (corrigidas, não corrigidas)
+Uma aplicação que recebe dados de um arquivo.csv e permite a consulta de uma lista de vulnerabilidades e a atualização de status das mesmas (corrigidas, não corrigidas)
 
 ## Instalação
 
@@ -34,7 +34,7 @@ $ pip install -r requirements.txt
 $ ./manage.py migrate
 ```
 
-- Carregue a pagina de scrips para popular o banco com o cvs
+- Carregue a pagina de scrips para popular o banco com o arquivo .csv
 
 ```
 $ ./manage.py runscript populate
