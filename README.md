@@ -28,6 +28,8 @@ $ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
 
+- crie um arquivo .env com uma secret key conforme o exemplo em .env.example
+
 - crie as tabelas no banco de dados
 
 ```
