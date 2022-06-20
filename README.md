@@ -1,6 +1,6 @@
 # Descrição
 
-Uma aplicação que recebe dados de um arquivo.csv e permite a consulta de uma lista de vulnerabilidades e a atualização de status das mesmas (corrigidas, não corrigidas)
+Uma aplicação que recebe uma lista de dados de vulnerabilidade de um arquivo.csv, popula o banco com esses dados e permite a consulta das vulnerabilidades e a atualização de status das mesmas (corrigidas, não corrigidas)
 
 ## Instalação
 
